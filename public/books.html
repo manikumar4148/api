@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title> </title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery.dropotron.min.js"></script>
+		<script src="js/jquery.scrollgress.min.js"></script>
+		<script src="js/jquery.scrolly.min.js"></script>
+		<script src="js/jquery.slidertron.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
+		<noscript>
+			<link rel="stylesheet" href="css/skel.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-xlarge.css" />
+		</noscript>
+		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+	</head>
+	<body class="landing">
+
+		<!-- Header -->
+			<header id="header" class="alt skel-layers-fixed">
+				<h1>My Website</h1>
+				<nav id="nav">
+					<ul>
+						<li><a href="/">Home</a></li>
+						<li><a href="/about">About</a></li>
+						<li><a href="/contact">Contact</a></li>
+						<li><a href="/books">Library</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<!-- Banner -->
+			<section id="banner">
+				<div class="inner">
+					<h2>Library</h2>
+				</div>
+			</section>
+
+		<!-- One -->
+			<section id="one" class="wrapper style1">
+				<div class="container">
+					<header class="major">
+						<h2>Our Books</h2>
+					</header>
+					<form>
+						<input type="text" placeholder="Enter title" id="title"/>
+						<input type="text" placeholder="Enter Author" id="author"/>
+						<button onClick='addBook()'>Add New Book</button>
+					</form>
+					<table id="books">
+						<tr>
+							<th>Title</th>
+							<th>Author</th>
+							<th></th>
+						</tr>
+					</table>
+				</div>
+			</section>
+		
+		<!-- Footer -->
+			<footer id="footer">
+				<ul class="icons">
+					<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+					<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+					<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+					<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+					<li><a href="#" class="icon fa-envelope"><span class="label">Envelope</span></a></li>
+				</ul>
+				<ul class="menu">
+					<li><a href="#">FAQ</a></li>
+					<li><a href="#">Terms of Use</a></li>
+					<li><a href="#">Privacy</a></li>
+					<li><a href="#">Contact</a></li>
+				</ul>
+				<span class="copyright">
+					&copy; Copyright. All rights reserved. Design by <a href="http://www.html5webtemplates.co.uk">Responsive Web Templates</a>
+				</span>
+			</footer>
+
+	</body>
+</html>
+<script>
+	function deleteBook(id){
+		$.ajax({
+			url:'/api/books/' + id,
+			method:'DELETE',
+			success:function(book){
+			x	alert('Book is deleted successfully')
+				window.location.href="/books"
+			},
+			error:function(err){
+				console.log(err)
+			}
+		})
+	}
+	function addBook(){
+		var formBody='title=' + $("#title").val() + "&author=" + $("#author").val();
+		console.log(formBody)
+		$.ajax({
+			url:'/api/books',
+			method:'POST',
+			data:formBody,
+			success:function(book){
+				console.log(book)
+			},
+			error:function(err){
+				console.log(err)
+			}
+		})
+	}
+	$.ajax({
+		url:'/api/books',
+		success:function(books){
+			console.log(books)
+			books.forEach(function(book){
+				$("#books").append("<tr><td>" + book.title+ "</td><td>" + book.author+ "</td><td><button onclick=deleteBook('" + book.id + "')>Delete</button></td></tr>" )
+			})
+			
+		},
+		error:function(err){
+			console.log(err)
+		}
+	})
+</script>
